@@ -1,23 +1,20 @@
 package com.paulofranklins.ecommerce.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 
+import static jakarta.persistence.GenerationType.IDENTITY;
+
 @Data
 @Entity
+@Table(name = "category")
 public class Category {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    @NotBlank
-    private String name;
-    @NotBlank
-    private String description;
-    @NotBlank
-    private String imageUrl;
+    @GeneratedValue(strategy = IDENTITY)
+    private @NotBlank Integer id;
+    private @NotBlank String name;
+    private @NotBlank String description;
+    private @NotBlank String imageUrl;
 }
