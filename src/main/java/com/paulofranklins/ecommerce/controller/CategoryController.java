@@ -56,7 +56,7 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<Category> createCategory(@Valid @RequestBody Category category) {
+    public ResponseEntity<Category> create(@Valid @RequestBody Category category) {
         if (existsByCategoryName(category.getName())) return status(CONFLICT).body(category);
         return status(CREATED).body(categoryService.save(category));
     }
