@@ -9,7 +9,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Data
 @Entity
-@Table(name = "category")
+@Table(name = "categories")
 public class Category {
     @Id
     @GeneratedValue(strategy = IDENTITY)
