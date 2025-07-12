@@ -1,6 +1,22 @@
 version: '3.8'
 
 services:
+  app:
+    build: .
+    container_name: ecommerce-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_APPLICATION_JSON: '{
+        "spring.datasource.url":"jdbc:postgresql://postgres:5432/ecommerce",
+        "spring.datasource.username":"root",
+        "spring.datasource.password":"root"
+      }'
+    networks:
+      - ecommerce-network
+
   postgres:
     image: postgres:15
     container_name: ecommerce-postgres
@@ -14,6 +30,11 @@ services:
     volumes:
       - ./postgres-init:/docker-entrypoint-initdb.d
       - postgres-data:/var/lib/postgresql/data
+    networks:
+      - ecommerce-network
 
 volumes:
   postgres-data:
+
+networks:
+  ecommerce-network:
