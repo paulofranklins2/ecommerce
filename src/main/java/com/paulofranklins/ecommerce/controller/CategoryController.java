@@ -50,7 +50,8 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Category> update(@PathVariable Integer id, @RequestBody Category category) {
+    public ResponseEntity<Category> update(@PathVariable Integer id,
+                                           @RequestBody Category category) {
         if (!existsByCategoryId(id)) return notFound().build();
         return status(ACCEPTED).body(categoryService.updateCategory(id, category));
     }
