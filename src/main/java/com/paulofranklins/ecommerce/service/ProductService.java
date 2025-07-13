@@ -1,6 +1,6 @@
 package com.paulofranklins.ecommerce.service;
 
-import com.paulofranklins.ecommerce.dto.ProductDto;
+import com.paulofranklins.ecommerce.dto.product.ProductDto;
 import com.paulofranklins.ecommerce.model.Category;
 import com.paulofranklins.ecommerce.model.Product;
 import com.paulofranklins.ecommerce.repository.ProductRepository;

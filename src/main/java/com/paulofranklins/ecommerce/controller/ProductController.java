@@ -1,6 +1,6 @@
 package com.paulofranklins.ecommerce.controller;
 
-import com.paulofranklins.ecommerce.dto.ProductDto;
+import com.paulofranklins.ecommerce.dto.product.ProductDto;
 import com.paulofranklins.ecommerce.model.Category;
 import com.paulofranklins.ecommerce.model.Product;
 import com.paulofranklins.ecommerce.service.CategoryService;
@@ -51,7 +51,8 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductDto> update(@PathVariable Integer id, @Valid @RequestBody ProductDto productDto) {
+    public ResponseEntity<ProductDto> update(@PathVariable Integer id,
+                                             @Valid @RequestBody ProductDto productDto) {
         if (!productExistsById(id)) return notFound().build();
 
         Product updated = productService.update(id, productDto);
