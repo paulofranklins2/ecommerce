@@ -1,10 +1,14 @@
 package com.paulofranklins.ecommerce.controller;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.paulofranklins.ecommerce.common.LoginResponse;
+import com.paulofranklins.ecommerce.dto.GoogleOAuthRequest;
 import com.paulofranklins.ecommerce.dto.user.LoginUserDto;
 import com.paulofranklins.ecommerce.dto.user.RegisterUserDto;
 import com.paulofranklins.ecommerce.model.User;
 import com.paulofranklins.ecommerce.service.AuthenticationService;
+import com.paulofranklins.ecommerce.service.GoogleOAuthService;
 import com.paulofranklins.ecommerce.service.JwtService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,11 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
     private final JwtService jwtService;
     private final AuthenticationService authenticationService;
+    private final GoogleOAuthService googleOAuthService;
 
 
-    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService) {
+    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService, GoogleOAuthService googleOAuthService) {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
+        this.googleOAuthService = googleOAuthService;
     }
 
     @PostMapping("register")
@@ -39,5 +45,21 @@ public class AuthenticationController {
         loginResponse.setExpiresIn(jwtService.getJwtExpiration());
 
         return ResponseEntity.ok(loginResponse);
+    }
+
+    @PostMapping("oauth2/callback/google")
+    public ResponseEntity<LoginResponse> googleLogin(@RequestBody GoogleOAuthRequest googleOAuthRequest) {
+        GoogleTokenResponse googleTokenResponse = googleOAuthService.exchangeCodeForTokens(googleOAuthRequest.getCode());
+
+        String idToken = googleTokenResponse.getIdToken();
+        GoogleIdToken.Payload payload = googleOAuthService.verifyToken(idToken);
+
+        System.out.println("User ID (sub): " + payload.getSubject());
+        System.out.println("Email: " + payload.getEmail());
+        System.out.println("Email Verified: " + payload.getEmailVerified());
+        System.out.println("Name: " + payload.get("name"));
+        System.out.println("Picture: " + payload.get("picture"));
+
+        return ResponseEntity.ok(new LoginResponse());
     }
 }
