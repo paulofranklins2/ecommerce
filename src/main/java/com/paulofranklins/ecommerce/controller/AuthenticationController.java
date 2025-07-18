@@ -3,6 +3,7 @@ package com.paulofranklins.ecommerce.controller;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.paulofranklins.ecommerce.common.LoginResponse;
+import com.paulofranklins.ecommerce.dto.GoogleOAuthRequest;
 import com.paulofranklins.ecommerce.dto.user.LoginUserDto;
 import com.paulofranklins.ecommerce.dto.user.RegisterUserDto;
 import com.paulofranklins.ecommerce.model.User;
@@ -42,9 +43,10 @@ public class AuthenticationController {
         return ResponseEntity.ok(loginResponse);
     }
 
-    @GetMapping("oauth2/callback/google")
-    public ResponseEntity<LoginResponse> googleLogin(@RequestParam("code") String code) {
-        GoogleTokenResponse googleTokenResponse = googleOAuthService.exchangeCodeForTokens(code);
+    @PostMapping("oauth2/callback/google")
+    public ResponseEntity<LoginResponse> googleLogin(@RequestBody GoogleOAuthRequest googleOAuthRequest) {
+        GoogleTokenResponse googleTokenResponse = googleOAuthService.exchangeCodeForTokens(googleOAuthRequest.getCode());
+
         String idToken = googleTokenResponse.getIdToken();
         Payload payload = googleOAuthService.verifyToken(idToken);
 
