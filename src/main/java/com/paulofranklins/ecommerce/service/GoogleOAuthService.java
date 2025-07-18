@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 
+import static java.util.Objects.nonNull;
+
 @Service
 public class GoogleOAuthService {
 
@@ -29,7 +31,6 @@ public class GoogleOAuthService {
         return new GoogleAuthorizationCodeTokenRequest(
                 new NetHttpTransport(),
                 new GsonFactory(),
-                "https://oauth2.googleapis.com/token",
                 clientId,
                 clientSecret,
                 code,
@@ -39,13 +40,15 @@ public class GoogleOAuthService {
 
     @SneakyThrows
     public GoogleIdToken.Payload verifyToken(String idTokenString) {
-        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory()).setAudience(Collections.singletonList(clientId)).build();
+        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
+                new NetHttpTransport(),
+                new GsonFactory())
+                .setAudience(Collections.singletonList(clientId))
+                .build();
 
         GoogleIdToken idToken = verifier.verify(idTokenString);
 
-        if (idToken != null) return idToken.getPayload();
+        if (nonNull(idToken)) return idToken.getPayload();
         else throw new IllegalArgumentException("Invalid ID token");
-
     }
-
 }
