@@ -13,7 +13,7 @@ import com.paulofranklins.ecommerce.service.JwtService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/auth/")
+@RequestMapping("/auth")
 @RestController
 public class AuthenticationController {
     private final JwtService jwtService;
@@ -26,12 +26,12 @@ public class AuthenticationController {
         this.googleOAuthService = googleOAuthService;
     }
 
-    @PostMapping("register")
+    @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody RegisterUserDto registerUserDto) {
         return ResponseEntity.ok(authenticationService.registerUser(registerUserDto));
     }
 
-    @PostMapping("login")
+    @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginUserDto loginUserDto) {
         User user = authenticationService.authenticateUser(loginUserDto);
         String jwtToken = jwtService.generateToken(null, user);
@@ -43,7 +43,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(loginResponse);
     }
 
-    @PostMapping("oauth2/callback/google")
+    @PostMapping("/oauth2/callback/google")
     public ResponseEntity<LoginResponse> googleLogin(@RequestBody GoogleOAuthRequest googleOAuthRequest) {
         GoogleTokenResponse googleTokenResponse = googleOAuthService.exchangeCodeForTokens(googleOAuthRequest.getCode());
 
